@@ -1,14 +1,15 @@
 package taxiSystem.model.person;
 
 import taxiSystem.enumeration.TypeOfVehicle;
+import taxiSystem.model.Location;
 import taxiSystem.model.vehicle.Vehicle;
 
 public class Driver extends Person {
 
     private Vehicle vehicle;
-    private String location;
+    private Location location;
 
-    public Driver(String userName, String name, String family, String nationalCode, String phoneNumber, int age, Vehicle vehicle, String location) {
+    public Driver(String userName, String name, String family, String nationalCode, String phoneNumber, int age, Vehicle vehicle, Location location) {
         super(userName, name, family, nationalCode, phoneNumber, age);
         this.vehicle = vehicle;
         this.location = location;
@@ -27,11 +28,11 @@ public class Driver extends Person {
     }
 
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 

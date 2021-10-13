@@ -1,6 +1,7 @@
 package taxiSystem;
 
 import taxiSystem.enumeration.TypeOfVehicle;
+import taxiSystem.model.Location;
 import taxiSystem.model.person.Driver;
 import taxiSystem.model.person.Passenger;
 
@@ -24,7 +25,7 @@ public class Main {
                     System.out.println("Enter number of drivers:");
                     int numberOfdrivers = input.nextInt();
                     for (int i = 0; i < numberOfdrivers; i++) {
-                        System.out.println("Enter drivers information: (userName, name, family, nationalCode, phoneNumber ,age,nameOfCar ,color, numberOfCar ) ");
+                        System.out.println("Enter drivers information: (userName, name, family, nationalCode, phoneNumber ,age,nameOfCar ,color, numberOfCar , location x ,location y) ");
                         input.nextLine();
 
                         String line = input.nextLine();
@@ -40,11 +41,15 @@ public class Main {
                         String color = lineArray[7];
                         String number = lineArray[8];
                         TypeOfVehicle typeOfVehicle = selectTypeOfVehicle();
-
-                        Vehicle vehicle = new Vehicle(1, nameOfCar, color, number,typeOfVehicle);
+                        String locationX= lineArray[9];
+                        int x=Integer.parseInt(locationX);
+                        String locationY = lineArray[10];
+                        int y=Integer.parseInt(locationY);
+                        Location location=new Location(x,y);
+                        Vehicle vehicle = new Vehicle(1, nameOfCar, color, number, typeOfVehicle);
                         int id = CarDataAccess.addVehicle(vehicle);
                         vehicle.setVehicleId(id);
-                        Driver driver = new Driver(userName, name, family, nationalCode, phoneNumber, age, vehicle,typeOfVehicle,location);
+                        Driver driver = new Driver(userName, name, family, nationalCode, phoneNumber, age, vehicle, location);
                         try {
 
                             driverDataAccess.addDriver(driver);
@@ -92,7 +97,7 @@ public class Main {
                         int selection2 = input.nextInt();
                         switch (selection2) {
                             case 1: {
-                                System.out.println("Enter your information: (userName, name, family, nationalCode, phoneNumber ,age ,nameOfCar ,color, numberOfCar) ");
+                                System.out.println("Enter your information: (userName, name, family, nationalCode, phoneNumber ,age,nameOfCar ,color, numberOfCar , location x,location y) ");
                                 input.nextLine();
                                 String line = input.nextLine();
                                 String[] lineArray = line.split(",");
@@ -106,10 +111,16 @@ public class Main {
                                 String nameOfCar = lineArray[6];
                                 String color = lineArray[7];
                                 String number = lineArray[8];
-                                Vehicle vehicle = new Vehicle(1, nameOfCar, color, number);
+                                TypeOfVehicle typeOfVehicle = selectTypeOfVehicle();
+                                String locationX= lineArray[9];
+                                int x=Integer.parseInt(locationX);
+                                String locationY = lineArray[10];
+                                int y=Integer.parseInt(locationY);
+                                Location location=new Location(x,y);
+                                Vehicle vehicle = new Vehicle(1, nameOfCar, color, number, typeOfVehicle);
                                 int id = CarDataAccess.addVehicle(vehicle);
                                 vehicle.setVehicleId(id);
-                                Driver driv = new Driver(userName, name, family, nationalCode, phoneNumber, age, vehicle);
+                                Driver driv = new Driver(userName, name, family, nationalCode, phoneNumber, age, vehicle, location);
                                 try {
                                     driverDataAccess.addDriver(driv);
                                 } catch (SQLException e) {
@@ -123,7 +134,7 @@ public class Main {
                             default:
                                 System.out.println("Invalid input!");
                         }
-                    } else if (driver.getUserStatus()==driver.getUserStatus().WA){
+                    } else if (driver.getUserStatus() == driver.getUserStatus().WAITING) {
                         System.out.println("you are waiting for trip");
                         System.out.println("1.Exit");
                         break;
@@ -212,7 +223,7 @@ public class Main {
     private static TypeOfVehicle selectTypeOfVehicle() {
         TypeOfVehicle typeOfVehicle = null;
         System.out.print("what is your vehicle? (1.car 2.motor) : ");
-        Scanner scanner=new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         int chosenTypeOfVehicle = scanner.nextInt();
         switch (chosenTypeOfVehicle) {
             case 1:
@@ -223,7 +234,8 @@ public class Main {
                 break;
 
             default:
-                System.out.println("the vehicle is invalid!");        }
+                System.out.println("the vehicle is invalid!");
+        }
         return typeOfVehicle;
     }
 
