@@ -5,11 +5,9 @@ import taxiSystem.model.person.Driver;
 import taxiSystem.model.person.Passenger;
 
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.Scanner;
 
 import taxiSystem.dataAccess.*;
-import taxiSystem.model.vehicle.Car;
 import taxiSystem.model.vehicle.Vehicle;
 
 public class Main {
@@ -41,10 +39,12 @@ public class Main {
                         String nameOfCar = lineArray[6];
                         String color = lineArray[7];
                         String number = lineArray[8];
-                        Vehicle vehicle = new Vehicle(1, nameOfCar, color, number);
+                        TypeOfVehicle typeOfVehicle = selectTypeOfVehicle();
+
+                        Vehicle vehicle = new Vehicle(1, nameOfCar, color, number,typeOfVehicle);
                         int id = CarDataAccess.addVehicle(vehicle);
                         vehicle.setVehicleId(id);
-                        Driver driver = new Driver(userName, name, family, nationalCode, phoneNumber, age, vehicle);
+                        Driver driver = new Driver(userName, name, family, nationalCode, phoneNumber, age, vehicle,typeOfVehicle,location);
                         try {
 
                             driverDataAccess.addDriver(driver);
@@ -208,6 +208,25 @@ public class Main {
             }
         }
     }
+
+    private static TypeOfVehicle selectTypeOfVehicle() {
+        TypeOfVehicle typeOfVehicle = null;
+        System.out.print("what is your vehicle? (1.car 2.motor) : ");
+        Scanner scanner=new Scanner(System.in);
+        int chosenTypeOfVehicle = scanner.nextInt();
+        switch (chosenTypeOfVehicle) {
+            case 1:
+                typeOfVehicle = TypeOfVehicle.CAR;
+                break;
+            case 2:
+                typeOfVehicle = TypeOfVehicle.MOTOR;
+                break;
+
+            default:
+                System.out.println("the vehicle is invalid!");        }
+        return typeOfVehicle;
+    }
+
 
     public static void showFirstPage() {
         System.out.println("1.Add a group of drivers");

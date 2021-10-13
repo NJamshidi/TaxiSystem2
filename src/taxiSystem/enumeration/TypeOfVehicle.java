@@ -1,7 +1,8 @@
 package taxiSystem.enumeration;
 
 public enum TypeOfVehicle {
-    CAR("car");
+    CAR("car"),
+    MOTOR("motor");
 
     String abbr;
 
