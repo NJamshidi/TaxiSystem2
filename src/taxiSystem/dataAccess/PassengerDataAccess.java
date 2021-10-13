@@ -1,5 +1,6 @@
 package taxiSystem.dataAccess;
 
+import taxiSystem.enumeration.UserStatus;
 import taxiSystem.model.person.Passenger;
 
 import java.sql.*;
@@ -30,7 +31,7 @@ public class PassengerDataAccess {
         }
     }
 
-    public Passenger getPassengerByUserName(String userName) throws SQLException {
+    public static Passenger getPassengerByUserName(String userName) throws SQLException {
         Connection connection = SqlConnection.getConnection();
         Passenger passenger = null;
         if (connection != null) {
@@ -95,6 +96,17 @@ public class PassengerDataAccess {
             return passengers;
         } else {
             return Collections.emptyList();
+        }
+    }
+    public void updatePassengerStatus(Passenger passenger, UserStatus userStatus) throws SQLException {
+        Connection connection = SqlConnection.getConnection();
+
+        if (connection != null) {
+            String sql = "UPDATE passengers SET status = ? WHERE userName= ?;";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, userStatus.toString().toLowerCase());
+            statement.setString(2, passenger.getUserName());
+            statement.executeUpdate();
         }
     }
 }

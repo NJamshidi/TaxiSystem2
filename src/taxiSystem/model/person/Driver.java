@@ -1,6 +1,5 @@
 package taxiSystem.model.person;
 
-import taxiSystem.enumeration.TypeOfVehicle;
 import taxiSystem.model.Location;
 import taxiSystem.model.vehicle.Vehicle;
 

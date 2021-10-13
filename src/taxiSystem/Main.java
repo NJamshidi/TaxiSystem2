@@ -1,7 +1,11 @@
 package taxiSystem;
 
+import taxiSystem.enumeration.Payment;
+import taxiSystem.enumeration.TripStatus;
 import taxiSystem.enumeration.TypeOfVehicle;
+import taxiSystem.enumeration.UserStatus;
 import taxiSystem.model.Location;
+import taxiSystem.model.Trip;
 import taxiSystem.model.person.Driver;
 import taxiSystem.model.person.Passenger;
 
@@ -41,11 +45,11 @@ public class Main {
                         String color = lineArray[7];
                         String number = lineArray[8];
                         TypeOfVehicle typeOfVehicle = selectTypeOfVehicle();
-                        String locationX= lineArray[9];
-                        int x=Integer.parseInt(locationX);
+                        String locationX = lineArray[9];
+                        int x = Integer.parseInt(locationX);
                         String locationY = lineArray[10];
-                        int y=Integer.parseInt(locationY);
-                        Location location=new Location(x,y);
+                        int y = Integer.parseInt(locationY);
+                        Location location = new Location(x, y);
                         Vehicle vehicle = new Vehicle(1, nameOfCar, color, number, typeOfVehicle);
                         int id = CarDataAccess.addVehicle(vehicle);
                         vehicle.setVehicleId(id);
@@ -112,11 +116,11 @@ public class Main {
                                 String color = lineArray[7];
                                 String number = lineArray[8];
                                 TypeOfVehicle typeOfVehicle = selectTypeOfVehicle();
-                                String locationX= lineArray[9];
-                                int x=Integer.parseInt(locationX);
+                                String locationX = lineArray[9];
+                                int x = Integer.parseInt(locationX);
                                 String locationY = lineArray[10];
-                                int y=Integer.parseInt(locationY);
-                                Location location=new Location(x,y);
+                                int y = Integer.parseInt(locationY);
+                                Location location = new Location(x, y);
                                 Vehicle vehicle = new Vehicle(1, nameOfCar, color, number, typeOfVehicle);
                                 int id = CarDataAccess.addVehicle(vehicle);
                                 vehicle.setVehicleId(id);
@@ -136,13 +140,63 @@ public class Main {
                         }
                     } else if (driver.getUserStatus() == driver.getUserStatus().WAITING) {
                         System.out.println("you are waiting for trip");
-                        System.out.println("1.Exit");
-                        break;
-                    } else {
+
+                    } else if (driver.getUserStatus() == driver.getUserStatus().NO_REQUEST) {
+                        System.out.println("1.Accept a Trip");
+                        System.out.println("2.Exit");
+                        int select = input.nextInt();
+                        switch (select) {
+                            case 1:
+                                driver.setUserStatus(UserStatus.WAITING);
+                               driverDataAccess.updateDriverStatus(driver, driver.getUserStatus());
+                                break;
+                            case 2:
+                                break;
+                            default:
+                                System.out.println("Invalid input!");
+                        }}
+                    else if (driver.getUserStatus() == driver.getUserStatus().ON_TRIP){
+                        boolean cashReceive = false;
+                        int select;
+                        Trip driverTrip = TripDataAccess.getTripByDriverUserName(driver.getUserName());
+                        Payment pay = null;
+                        pay = driverTrip.getPayment();
+
                         System.out.println(driver.getUserStatus());
                         System.out.println("1.Confirmation Receive money");
                         System.out.println("2.Trip Finish");
                         System.out.println("3.Exit");
+                            select = input.nextInt();
+                            switch (select) {
+                                case 1:
+                                    if (pay == Payment.BY_ACCOUNT_BALANCE)
+                                        System.out.println("payment done with account balance");
+                                    else {
+                                        cashReceive = true;
+                                        System.out.println("payment done with cash");
+                                    }
+                                    continue;
+                                case 2:
+                                    if ((pay==Payment.BY_CASH) && (!cashReceive)){
+                                        System.out.println("payment do not made! You should pay cost and then trip finish");
+                                        continue;
+                                    } else {
+
+                                        Passenger passenger = PassengerDataAccess.getPassengerByUserName(driverTrip.getPassenger().getUserName());
+                                        PassengerDataAccess.updatePassengerStatus(passenger, UserStatus.NO_REQUEST);
+                                   //     TripDataAccess.updatePassengerStatus(driverTrip, TripStatus.FINISH);
+                                        DriverDataAccess.updateDriverStatus(driver, UserStatus.NO_REQUEST);
+                                        DriverDataAccess.updateDriverLocation(driver, driverTrip.getDestination());
+                                        System.out.println("your trip finish");
+
+                                    }
+                                    break;
+
+                                case 3:
+                                    break;
+                                default:
+                                    System.out.println("invalid input!");                            }
+
                     }
                 }
                 break;

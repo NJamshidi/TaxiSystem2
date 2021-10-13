@@ -1,6 +1,6 @@
 package taxiSystem.dataAccess;
 
-import taxiSystem.enumeration.TypeOfVehicle;
+import taxiSystem.enumeration.UserStatus;
 import taxiSystem.model.person.Driver;
 import taxiSystem.model.vehicle.Vehicle;
 
@@ -14,7 +14,7 @@ public class DriverDataAccess {
     public int addDriver(Driver driver) throws SQLException {
         Connection connection = SqlConnection.getConnection();
         if (connection != null) {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into drivers (driverUserName, name, family, nationalCode, phoneNumber, age, vehicleId) values ( ?, ?,?,?,?,?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into drivers (driverUserName, name, family, nationalCode, phoneNumber, age, vehicleId,status,typeOfVehicle,location) values ( ?, ?,?,?,?,?,?,?,?,?)");
             preparedStatement.setString(1, driver.getUserName());
             preparedStatement.setString(2, driver.getName());
             preparedStatement.setString(3, driver.getFamily());
@@ -22,6 +22,9 @@ public class DriverDataAccess {
             preparedStatement.setString(5, driver.getPhoneNumber());
             preparedStatement.setInt(6, driver.getAge());
             preparedStatement.setInt(7, driver.getVehicle().getVehicleId());
+            preparedStatement.setString(8, driver.getUserStatus().toString());
+            preparedStatement.setString(9, driver.getVehicle().getTypeOfVehicle().toString());
+            preparedStatement.setString(10, driver.getLocation().toString());
 
 
             int i = preparedStatement.executeUpdate();
@@ -50,6 +53,7 @@ public class DriverDataAccess {
                 driver.setPhoneNumber(resultSet.getString("phoneNumber"));
                 driver.setAge(resultSet.getInt("age"));
                 int vehicleId = resultSet.getInt("vehicleId");
+
                 vehicle = CarDataAccess.getVehicleById(vehicleId);
                 driver.setVehicle(vehicle);
                 drivers.add(driver);
@@ -86,6 +90,26 @@ public class DriverDataAccess {
             }
         }
         return null;
+    }
+    public  void updateDriverStatus(Driver driver, UserStatus userStatus) throws SQLException {
+        Connection connection = SqlConnection.getConnection();
+        if (connection != null) {
+            String sql = "UPDATE drivers SET status = ? WHERE userName = ?;";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, userStatus.toString().toLowerCase());
+            statement.setString(2, driver.getUserName());
+            statement.executeUpdate();
+        }
+    }
+    public void updateDriverLocation(Driver driver, String location) throws SQLException {
+        Connection connection = SqlConnection.getConnection();
+        if (connection != null) {
+            String sql = "UPDATE drivers SET location = ? WHERE userName = ?;";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, location);
+            statement.setString(2, driver.getUserName());
+            statement.executeUpdate();
+        }
     }
 
 }
