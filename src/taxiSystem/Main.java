@@ -18,9 +18,10 @@ import taxiSystem.model.vehicle.Vehicle;
 public class Main {
     public static void main(String[] args) throws SQLException {
         Scanner input = new Scanner(System.in);
-        DriverDataAccess driverDataAccess = new DriverDataAccess();
-        PassengerDataAccess passengerDataAccess = new PassengerDataAccess();
+
         while (true) {
+            DriverDataAccess driverDataAccess = new DriverDataAccess();
+            PassengerDataAccess passengerDataAccess = new PassengerDataAccess();
             showMenu:
             showFirstPage();
             int selection = input.nextInt();
@@ -184,7 +185,7 @@ public class Main {
 
                                         Passenger passenger = PassengerDataAccess.getPassengerByUserName(driverTrip.getPassenger().getUserName());
                                         PassengerDataAccess.updatePassengerStatus(passenger, UserStatus.NO_REQUEST);
-                                   //     TripDataAccess.updatePassengerStatus(driverTrip, TripStatus.FINISH);
+                                        TripDataAccess.updatePassengerStatus(driverTrip, TripStatus.FINISH);
                                         DriverDataAccess.updateDriverStatus(driver, UserStatus.NO_REQUEST);
                                         DriverDataAccess.updateDriverLocation(driver, driverTrip.getDestination());
                                         System.out.println("your trip finish");

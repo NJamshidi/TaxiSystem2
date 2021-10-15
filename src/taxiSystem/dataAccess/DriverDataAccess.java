@@ -14,7 +14,7 @@ public class DriverDataAccess {
     public int addDriver(Driver driver) throws SQLException {
         Connection connection = SqlConnection.getConnection();
         if (connection != null) {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into drivers (driverUserName, name, family, nationalCode, phoneNumber, age, vehicleId,status,typeOfVehicle,location) values ( ?, ?,?,?,?,?,?,?,?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into drivers (driverUserName, name, family, nationalCode, phoneNumber, age, vehicleId,status,location) values ( ?,?,?,?,?,?,?,?,?)");
             preparedStatement.setString(1, driver.getUserName());
             preparedStatement.setString(2, driver.getName());
             preparedStatement.setString(3, driver.getFamily());
@@ -23,8 +23,7 @@ public class DriverDataAccess {
             preparedStatement.setInt(6, driver.getAge());
             preparedStatement.setInt(7, driver.getVehicle().getVehicleId());
             preparedStatement.setString(8, driver.getUserStatus().toString());
-            preparedStatement.setString(9, driver.getVehicle().getTypeOfVehicle().toString());
-            preparedStatement.setString(10, driver.getLocation().toString());
+            preparedStatement.setString(9, driver.getLocation().toString());
 
 
             int i = preparedStatement.executeUpdate();
@@ -53,6 +52,8 @@ public class DriverDataAccess {
                 driver.setPhoneNumber(resultSet.getString("phoneNumber"));
                 driver.setAge(resultSet.getInt("age"));
                 int vehicleId = resultSet.getInt("vehicleId");
+                driver.getUserStatus().toString();
+                driver.setLocation(resultSet.getString("location"));
 
                 vehicle = CarDataAccess.getVehicleById(vehicleId);
                 driver.setVehicle(vehicle);
@@ -94,7 +95,7 @@ public class DriverDataAccess {
     public  void updateDriverStatus(Driver driver, UserStatus userStatus) throws SQLException {
         Connection connection = SqlConnection.getConnection();
         if (connection != null) {
-            String sql = "UPDATE drivers SET status = ? WHERE userName = ?;";
+            String sql = "UPDATE drivers SET status = ? WHERE driverUserName = ?;";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, userStatus.toString().toLowerCase());
             statement.setString(2, driver.getUserName());
@@ -104,7 +105,7 @@ public class DriverDataAccess {
     public void updateDriverLocation(Driver driver, String location) throws SQLException {
         Connection connection = SqlConnection.getConnection();
         if (connection != null) {
-            String sql = "UPDATE drivers SET location = ? WHERE userName = ?;";
+            String sql = "UPDATE drivers SET location = ? WHERE driverUserName = ?;";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, location);
             statement.setString(2, driver.getUserName());

@@ -34,6 +34,10 @@ public class Trip {
         this.payment = payment;
     }
 
+    public Trip() {
+
+    }
+
     public int getId() {
         return id;
     }

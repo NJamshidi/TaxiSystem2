@@ -102,7 +102,7 @@ public class PassengerDataAccess {
         Connection connection = SqlConnection.getConnection();
 
         if (connection != null) {
-            String sql = "UPDATE passengers SET status = ? WHERE userName= ?;";
+            String sql = "UPDATE passengers SET status = ? WHERE PassengerUserName= ?;";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, userStatus.toString().toLowerCase());
             statement.setString(2, passenger.getUserName());
